@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LaunchCode
@@ -50,8 +51,9 @@ public class JobData {
 
         // load data, if not already loaded
         loadData();
+        ArrayList<HashMap<String, String>> allJobsCopy = new ArrayList<>(allJobs);
 
-        return allJobs;
+        return allJobsCopy;
     }
 
     /**
@@ -74,11 +76,40 @@ public class JobData {
 
         for (HashMap<String, String> row : allJobs) {
 
-            String aValue = row.get(column);
+            String aValueLowerCase = row.get(column).toLowerCase();
 
-            if (aValue.contains(value)) {
+            if (aValueLowerCase.contains(value.toLowerCase())) {
                 jobs.add(row);
             }
+        }
+
+        return jobs;
+    }
+
+    /**
+     * method that will search for a String within each of the columns
+     **/
+    public static ArrayList<HashMap<String, String>> findByValue(String searchTerm){
+        System.out.println("Trying to search  " + searchTerm);
+
+        // load data, if not already loaded
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> row : allJobs) {
+
+            for (Map.Entry<String, String> entry : row.entrySet()) {
+
+                String aValueLowerCase = entry.getValue().toLowerCase();
+
+                if (aValueLowerCase.contains(searchTerm.toLowerCase())) {
+                    jobs.add(row);
+                    break;
+                }
+
+            }
+
         }
 
         return jobs;
@@ -124,5 +155,7 @@ public class JobData {
             e.printStackTrace();
         }
     }
+
+
 
 }
